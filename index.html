@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#D4AF37">
+  <title>ATRIUM EVENTOS | Operadora Logística</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">
+          <img src="logo.png" alt="Atrium">
+        </div>
+        <div>
+          <strong id="brandTitle">ATRIUM EVENTOS</strong>
+          <span id="brandSubtitle">Sistema de Acreditación</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="screen-scan" class="screen">
+      <div class="card">
+        <h1>Escáner QR</h1>
+        <p class="sub">Escanea el código QR para registrar el ingreso al evento.</p>
+        
+        <div id="scanIdle" class="scan-box">
+          <div class="scan-hint">
+            <div class="qr-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+              </svg>
+            </div>
+            <div>▦ Apunta la cámara al código QR de la entrada</div>
+          </div>
+        </div>
+        
+        <div id="scanLive" class="scan-box hidden">
+          <div id="reader"></div>
+        </div>
+
+        <div id="camStatus" class="tiny" style="margin:10px 0 8px; text-align:center;"></div>
+
+        <button id="btnStart" class="btn btn-primary">Iniciar escaneo</button>
+        <button id="btnStop" class="btn btn-ghost hidden">Detener</button>
+
+        <div class="manual-box">
+          <input type="text" id="manualCode" class="manual-input" placeholder="ATR-0001">
+          <button id="btnManualSearch" class="btn btn-ghost">Validar código manual.</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="screen-history" class="screen hidden">
+      <div class="card">
+        <h1>Historial (este teléfono)</h1>
+        <p class="sub"><span id="count">0</span> ingresos registrados</p>
+        <div id="historyList"></div>
+        <button id="btnClear" class="btn btn-danger" style="margin-top:14px;">Borrar historial local</button>
+      </div>
+    </div>
+
+    <div id="screen-settings" class="screen hidden">
+      <div class="card">
+        <h1>Configuración</h1>
+        <p class="sub">Personaliza tu experiencia</p>
+        
+        <div class="row">
+          <div class="left">
+            <div class="title">Modo Oscuro</div>
+            <div class="meta" id="darkLabel">Desactivado</div>
+          </div>
+          <button id="toggleTheme" class="btn btn-ghost" style="width:auto; padding:8px 14px;">Cambiar</button>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="left">
+            <div class="title">Acerca de</div>
+            <div class="meta" id="aboutVersion">ATRIUM EVENTOS · Versión 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button id="tabScan" class="active">Escanear</button>
+      <button id="tabHistory">Historial</button>
+      <button id="tabSettings">Ajustes</button>
+    </div>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <button id="modalClose" class="close">×</button>
+      <div class="person">
+        <img id="mAvatar" class="avatar" src="" alt="Avatar">
+        <div id="mName" class="name">—</div>
+        <div id="mCat" class="badge">—</div>
+        <div id="mCode"></div>
+        <div id="mMsg" class="tiny"></div>
+        <div id="mStatusOk" class="status-ok hidden"></div>
+        <div id="mStatusBad" class="status-bad hidden"></div>
+        <button id="btnRegister" class="btn btn-success hidden">Registrar ingreso</button>
+        <button id="btnAlready" class="btn btn-ghost hidden">Ver historial</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="dangerBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <button id="dangerClose" class="close">×</button>
+      <div class="danger-copy">
+        <div class="name">Borrar historial local</div>
+        <div>⚠️ Esta acción no se puede deshacer</div>
+        <div id="dangerText" class="tiny">Se eliminarán todos los ingresos guardados en este teléfono.</div>
+        <input type="text" id="dangerInput" class="manual-input" placeholder="Escribe BORRAR para confirmar">
+        <button id="dangerConfirm" class="btn btn-danger" disabled>Confirmar borrado</button>
+        <button id="dangerCancel" class="btn btn-ghost">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="scanFlash" class="scan-flash"></div>
+
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="config.js"></script>
+  <script src="storage.js"></script>
+  <script src="ui.js"></script>
+  <script src="api.js"></script>
+  <script src="scanner.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
