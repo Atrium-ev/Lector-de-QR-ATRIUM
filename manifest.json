@@ -1,7 +1,7 @@
 {
-  "name": "AKUAI Check-in",
-  "short_name": "AKUAI",
-  "description": "AKUAI Check-in para validación de entradas e ingreso al evento",
+  "name": "ATRIUM EVENTOS",
+  "short_name": "ATRIUM",
+  "description": "ATRIUM EVENTOS | Operadora Logística",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
